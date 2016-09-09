@@ -8,9 +8,11 @@
 
 	var i;
 	$("#results").hide();
+	$("#ipNotValid").hide();
 
 	function resetFields(){
 		$("#results").hide();
+		$("#ipNotValid").hide();
 		$("#IPaddr").text("NULL");
 		$("#creationDate").text("NULL");
 		$("#updateDate").text("NULL");
@@ -164,23 +166,36 @@
 					// Enable submit.
 						$submit.disabled = false;
 
-						resetFields();
+						resetFields(); 
 
 					// Show message.
 						$message._show('success', 'Loading...');
 						
 					//$message._show('failure', 'Something went wrong. Please try again.');
 
-						var IP = $("#ipDomain").val();
-						var url = "https://cymon.io/api/nexus/v1/ip/"+IP+"/";
+						switch(getFormat($("#ipDomain").val())){
+							case "IP": {
+								var IP = $("#ipDomain").val();
+								var url = "https://cymon.io/api/nexus/v1/ip/"+IP+"/";
 
-						$.ajax({
-							method: "GET",
-							url: url,
-						})
-						.done(function(response){
-							extractData(response);
-						});
+								$.ajax({
+									method: "GET",
+									url: url,
+								})
+								.done(function(response){
+									extractData(response);
+								});
+
+								break;
+							}
+
+							case "IPNotValid": {
+								$("#ipNotValid").show();
+								break;
+							}
+						}
+
+						
 				});
 
 		})();
@@ -194,6 +209,23 @@
 			}
 
 			$("#results").show();
+		}
+
+		function getFormat(addr){
+			var pIP=new RegExp("^([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})$");
+    
+    		if(addr.search(pIP)==0)
+    		{
+    			var value = addr.split(".");
+    			if(value[0]<=255 && value[1]<=255 && value[2]<=255 && value[3]<=255)
+        		{
+            		return "IP";
+        		}else{
+        			return "IPNotValid";
+        		}
+    		}else{
+    			return "Other";
+    		}
 		}
 
 })();
