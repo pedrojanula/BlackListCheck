@@ -6,6 +6,18 @@
 
 (function() {
 
+	var i;
+	$("#results").hide();
+
+	function resetFields(){
+		$("#results").hide();
+		$("#IPaddr").text("NULL");
+		$("#creationDate").text("NULL");
+		$("#updateDate").text("NULL");
+		$("#sources li").remove();
+		return 0;
+	}
+
 	"use strict";
 
 	// Methods/polyfills.
@@ -33,6 +45,7 @@
 
 	// Slideshow Background.
 		(function() {
+			//$("#results").hide();
 
 			// Settings.
 				var settings = {
@@ -148,25 +161,40 @@
 					// Disable submit.
 						$submit.disabled = true;
 
-					// Process form.
-					// Note: Doesn't actually do anything yet (other than report back with a "thank you"),
-					// but there's enough here to piece together a working AJAX submission call that does.
-						window.setTimeout(function() {
+					// Enable submit.
+						$submit.disabled = false;
 
-							// Reset form.
-								$form.reset();
+						resetFields();
 
-							// Enable submit.
-								$submit.disabled = false;
+					// Show message.
+						$message._show('success', 'Loading...');
+						
+					//$message._show('failure', 'Something went wrong. Please try again.');
 
-							// Show message.
-								$message._show('success', 'Thank you!');
-								//$message._show('failure', 'Something went wrong. Please try again.');
+						var IP = $("#ipDomain").val();
+						var url = "https://cymon.io/api/nexus/v1/ip/"+IP+"/";
 
-						}, 750);
-
+						$.ajax({
+							method: "GET",
+							url: url,
+						})
+						.done(function(response){
+							extractData(response);
+						});
 				});
 
 		})();
 
+		function extractData(data){
+			$("#IPaddr").text(data['addr']);
+			$("#creationDate").text(new Date(Date.parse(data['created'])));
+			$("#updateDate").text(new Date(Date.parse(data['updated'])));
+			for(i=0; i<data['sources'].length; i++){
+				$("#sources").append("<li><a target='_blank' href='http://"+data['sources'][i]+"'>"+data['sources'][i]+"</a></li>");
+			}
+
+			$("#results").show();
+		}
+
 })();
+

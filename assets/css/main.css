@@ -74,6 +74,15 @@
 		width: 100%;
 	}
 
+	@media screen and (max-height: 2600px) {
+
+			html, body {
+				height: auto;
+				min-height: 100%;
+			}
+
+		}
+
 		@media screen and (max-height: 640px) {
 
 			html, body {
@@ -1145,7 +1154,7 @@
 		@media screen and (max-width: 1680px) {
 
 			#footer {
-				bottom: 3.5em;
+				bottom: 0px;
 				left: 3.5em;
 			}
 
@@ -1179,3 +1188,30 @@
 			}
 
 		}
+
+.dif{
+	display: inline-flex;
+}
+
+.ml5{
+	margin-left: 5px;
+}
+
+.ml15{
+	margin-left: 15px;
+}
+
+.mb20{
+	margin-bottom: 20px;
+}
+
+.bggray{
+	background-color: #595959;
+}
+
+@media screen and (max-height: 2600px) {
+
+	#footer {
+		position: inherit;
+	}
+}
