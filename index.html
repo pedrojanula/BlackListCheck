@@ -31,6 +31,14 @@
 				IP Address is not valid.
 			</div>
 
+			<div id="IPNotFound" class="alert alert-success" role="alert">
+				IP Address not found.
+			</div>
+
+			<div id="DomainNotFound" class="alert alert-success" role="alert">
+				Domain Name not found.
+			</div>
+
 			<div class="col-md-8 center-block">
 				<div id="results" class="table panel-primary bggray">
 					<div class="panel-heading">
@@ -39,8 +47,12 @@
 
 					<div class="panel-body">
 						<div class="col-md-10">
-							<div class="dif">
+							<div id="divIP" class="dif">
 								<label>IP: </label> <span class="ml5" id="IPaddr"> NULL</span>
+							</div>
+
+							<div id="divD" class="dif">
+								<label>URL: </label> <span class="ml5" id="URLaddr"> NULL</span>
 							</div>
 
 							<br/>

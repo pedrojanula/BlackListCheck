@@ -9,10 +9,14 @@
 	var i;
 	$("#results").hide();
 	$("#ipNotValid").hide();
+	$("#IPNotFound").hide();
+	$("#DomainNotFound").hide();
 
 	function resetFields(){
 		$("#results").hide();
 		$("#ipNotValid").hide();
+		$("#IPNotFound").hide();
+		$("#DomainNotFound").hide();
 		$("#IPaddr").text("NULL");
 		$("#creationDate").text("NULL");
 		$("#updateDate").text("NULL");
@@ -183,7 +187,10 @@
 									url: url,
 								})
 								.done(function(response){
-									extractData(response);
+									extractData(response, "IP");
+								})
+								.fail(function(response){
+									$("#IPNotFound").show();
 								});
 
 								break;
@@ -193,6 +200,24 @@
 								$("#ipNotValid").show();
 								break;
 							}
+
+							case "Domain": {
+								var addr = removeHTTP($("#ipDomain").val());
+								var url = "https://cymon.io/api/nexus/v1/domain/"+addr;
+
+								$.ajax({
+									method: "GET",
+									url: url,
+								})
+								.done(function(response){
+									extractData(response, "Domain");
+								})
+								.fail(function(response){
+									$("#DomainNotFound").show();
+								});
+								
+								break;
+							}
 						}
 
 						
@@ -200,8 +225,16 @@
 
 		})();
 
-		function extractData(data){
-			$("#IPaddr").text(data['addr']);
+		function extractData(data, typeValue){
+			if(typeValue == "IP"){
+				$("#IPaddr").text(data['addr']);
+				$("#divD").hide();
+				$("#divIP").show();
+			}else if(typeValue == "Domain"){
+				$("#URLaddr").text(data['name']);
+				$("#divD").show();
+				$("#divIP").hide();
+			}
 			$("#creationDate").text(new Date(Date.parse(data['created'])));
 			$("#updateDate").text(new Date(Date.parse(data['updated'])));
 			for(i=0; i<data['sources'].length; i++){
@@ -224,9 +257,35 @@
         			return "IPNotValid";
         		}
     		}else{
-    			return "Other";
+    			if(checkDomainName(addr)){
+    				return "Domain";
+    			}else{
+    				return "NoDomain";
+    			}
     		}
 		}
 
+		function checkDomainName(addr){
+			var n = addr.search('.');
+			if(n != -1){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		function removeHTTP(addr){
+			var n = addr.search("http://");
+			if(n != -1){
+				addr = addr.replace("http://", "");
+			}
+
+			var m = addr.search("https://");
+			if(m != -1){
+				addr = addr.replace("https://", "");
+			}
+
+			return addr;
+		}
 })();
 
