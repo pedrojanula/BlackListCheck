@@ -37,4 +37,4 @@ The Cymon API is limited to 500 request per day (without API Key)
 
 
 ##### Aditional Info: 
-** www.domain.com and domain.com are two different directions. You may www.domain.com is reported but domain.com is not. **
+**www.domain.com and domain.com are two different directions. You may www.domain.com is reported but domain.com is not.**
